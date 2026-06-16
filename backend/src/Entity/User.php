@@ -28,6 +28,9 @@ class User
     #[ORM\Column(type: Types::JSON)]
     private array $roles = ['ROLE_USER'];
 
+    #[ORM\Column(options: ['default' => true])]
+    private bool $isActive = true;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -85,7 +88,19 @@ class User
 
     public function setRoles(array $roles): self
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_unique($roles));
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
@@ -102,6 +117,7 @@ class User
             'email' => $this->email,
             'username' => $this->username,
             'roles' => $this->getRoles(),
+            'isActive' => $this->isActive,
             'createdAt' => $this->createdAt->format(\DateTimeInterface::ATOM),
         ];
     }

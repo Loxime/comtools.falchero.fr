@@ -1,8 +1,9 @@
-type AuthUser = {
+export type AuthUser = {
   id: number
   email: string
   username: string | null
   roles: string[]
+  isActive: boolean
   createdAt: string
 }
 
@@ -14,6 +15,10 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as AuthUser | null
   }),
+
+  getters: {
+    isAdmin: (state) => state.user?.roles.includes('ROLE_ADMIN') === true
+  },
 
   actions: {
     async login(email: string, password: string) {

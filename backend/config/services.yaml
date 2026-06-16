@@ -1,5 +1,6 @@
 parameters:
   cors_allow_origin: '%env(CORS_ALLOW_ORIGIN)%'
+  default_admin_password: 'ChangeMe123'
 
 services:
   _defaults:
@@ -12,3 +13,7 @@ services:
   App\EventSubscriber\CorsSubscriber:
     arguments:
       $allowedOrigin: '%cors_allow_origin%'
+
+  App\Command\SeedAdminUserCommand:
+    arguments:
+      $adminPassword: '%env(default:default_admin_password:MAXIME_ADMIN_PASSWORD)%'

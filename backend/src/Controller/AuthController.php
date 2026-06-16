@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Security\SessionUserProvider;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ final class AuthController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $users,
+        private readonly SessionUserProvider $sessionUsers,
     ) {
     }
 
@@ -63,7 +65,7 @@ final class AuthController
         $password = (string) ($data['password'] ?? '');
         $user = $this->users->findOneBy(['email' => $email]);
 
-        if ($user === null || !password_verify($password, $user->getPassword())) {
+        if ($user === null || !$user->isActive() || !password_verify($password, $user->getPassword())) {
             return $this->error('Identifiants invalides.', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -87,24 +89,17 @@ final class AuthController
     #[Route('/me', name: 'api_me', methods: ['GET'])]
     public function me(Request $request): JsonResponse
     {
-        $user = $this->currentUser($request);
+        $user = $this->sessionUsers->currentUser($request);
 
         if ($user === null) {
             return $this->error('Non authentifie.', Response::HTTP_UNAUTHORIZED);
         }
 
-        return new JsonResponse(['user' => $user->toArray()]);
-    }
-
-    private function currentUser(Request $request): ?User
-    {
-        if (!$request->hasSession()) {
-            return null;
+        if (!$this->sessionUsers->hasRole($user, 'ROLE_USER')) {
+            return $this->error('Acces refuse.', Response::HTTP_FORBIDDEN);
         }
 
-        $userId = $request->getSession()->get('user_id');
-
-        return is_int($userId) ? $this->users->find($userId) : null;
+        return new JsonResponse(['user' => $user->toArray()]);
     }
 
     private function jsonPayload(Request $request): array
