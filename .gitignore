@@ -1,6 +1,7 @@
 vendor/
 node_modules/
 .nuxt/
+.output/
 .env
 var/
 *.log

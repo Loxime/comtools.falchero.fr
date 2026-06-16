@@ -1,5 +1,7 @@
 {
   "type": "project",
+  "name": "loxime/comtools-backend",
+  "description": "Backend Symfony for ComTools.",
   "license": "proprietary",
   "minimum-stability": "stable",
   "prefer-stable": true,
@@ -7,6 +9,8 @@
     "php": ">=8.3",
     "doctrine/dbal": "^4.0",
     "doctrine/doctrine-bundle": "^2.13",
+    "doctrine/doctrine-migrations-bundle": "^3.3",
+    "doctrine/orm": "^3.3",
     "symfony/console": "7.3.*",
     "symfony/dotenv": "7.3.*",
     "symfony/flex": "^2",
