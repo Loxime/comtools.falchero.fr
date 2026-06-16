@@ -1,0 +1,18 @@
+{
+  "name": "comtools-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "nuxt": "3.12.4",
+    "vue": "3.4.38"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4"
+  }
+}

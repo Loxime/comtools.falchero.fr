@@ -1,0 +1,8 @@
+vendor/
+node_modules/
+.nuxt/
+.env
+var/
+*.log
+.DS_Store
+docker/mysql/
